@@ -36,7 +36,12 @@ import com.android.internal.telephony.dataconnection.DataCallResponse;
 
 import java.util.ArrayList;
 
-public class HTCQualcommRIL extends RIL implements CommandsInterface {
+/**
+ * RIL customization for One HTC Max (Verizon)
+ *
+ * {@hide}
+ */
+public class T6VZWRIL extends RIL implements CommandsInterface {
 
     private static final int RIL_UNSOL_ENTER_LPM = 1523;
     private static final int RIL_UNSOL_CDMA_3G_INDICATOR = 3009;
@@ -47,11 +52,11 @@ public class HTCQualcommRIL extends RIL implements CommandsInterface {
     private static final int RIL_UNSOL_RESPONSE_IMS_NETWORK_STATE_CHANGED = 21005;
     private static final int RIL_UNSOL_RESPONSE_DATA_NETWORK_STATE_CHANGED = 21007;
 
-    public HTCQualcommRIL(Context context, int networkMode, int cdmaSubscription) {
+    public T6VZWRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription, null);
     }
 
-    public HTCQualcommRIL(Context context, int networkMode, int cdmaSubscription,
+    public T6VZWRIL(Context context, int networkMode, int cdmaSubscription,
             Integer instanceId) {
         super(context, networkMode, cdmaSubscription, instanceId);
     }
@@ -115,6 +120,16 @@ public class HTCQualcommRIL extends RIL implements CommandsInterface {
                                         new AsyncResult (null, null, null));
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void getRadioCapability(Message response) {
+        riljLog("getRadioCapability: returning static radio capability");
+        if (response != null) {
+            Object ret = makeStaticRadioCapability();
+            AsyncResult.forMessage(response, ret, null);
+            response.sendToTarget();
         }
     }
 }
